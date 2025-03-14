@@ -18,54 +18,28 @@ import MenuIcon from "@mui/icons-material/Menu";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, useGLTF, Environment } from "@react-three/drei";
 
-// 3D Model Component with responsive scaling based on window width.
-function Model() {
+const Navbar = () => {
+    // Load the GLTF scene
     const { scene } = useGLTF("/assets/model.glb");
 
-    // State to adjust scale based on window width (<600px = mobile)
-    const [modelScale, setModelScale] = useState(window.innerWidth < 600 ? true : false);
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+    const navItems = ["Products", "Videos", "Contact"];
+
+    // Boolean flag: true if window width is less than 600px (mobile), false otherwise.
+    const [modelScaleFlag, setModelScaleFlag] = useState(window.innerWidth < 600);
 
     useEffect(() => {
         const handleResize = () => {
-            setModelScale(window.innerWidth < 600 ? true : false);
+            setModelScaleFlag(window.innerWidth < 600);
         };
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
 
-    return (
-        <primitive
-            object={scene}
-            // Position: [-70, -70, 0]
-            //  - X: -70 → Shifts the model 70 units to the left.
-            //  - Y: -70 → Shifts the model 70 units downward.
-            //  - Z: 0  → No forward/backward movement.
-            position={[modelScale ? -160 : -110, -100, 0]}
-            // Rotation: [0, 2, 0]
-            //  - 0 (X-axis): No tilt forward/backward.
-            //  - 2 (Y-axis): Rotates the model 2 radians (~114.6°) about the vertical axis.
-            //  - 0 (Z-axis): No roll.
-            rotation={[0, 2, 0]}
-            // Scale: Responsive – 1 on mobile, 1.5 on larger screens.
-            scale={1.6}
-        />
-    );
-}
-
-// Main Navbar Component with Home and remaining sections.
-const Navbar = () => {
-    const theme = useTheme();
-    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-    // Only include the sections you want.
-    const navItems = ["Products", "Videos", "Contact"];
     const [mobileOpen, setMobileOpen] = useState(false);
+    const handleDrawerToggle = () => setMobileOpen((prev) => !prev);
 
-    // Toggle the mobile drawer.
-    const handleDrawerToggle = () => {
-        setMobileOpen(!mobileOpen);
-    };
-
-    // Smooth scroll to section by id.
     const scrollToSection = (id) => {
         const section = document.getElementById(id);
         if (section) {
@@ -79,7 +53,6 @@ const Navbar = () => {
             {/* Navbar Header */}
             <AppBar position="sticky" sx={{ background: "#fff" }}>
                 <Toolbar>
-                    {/* Logo/Brand (clickable to scroll home) */}
                     <Typography
                         variant="h5"
                         sx={{
@@ -93,8 +66,6 @@ const Navbar = () => {
                     >
                         MADZILLA
                     </Typography>
-
-                    {/* Desktop Navigation Menu */}
                     <Box sx={{ display: { xs: "none", md: "block" } }}>
                         {navItems.map((item) => (
                             <Button
@@ -106,8 +77,6 @@ const Navbar = () => {
                             </Button>
                         ))}
                     </Box>
-
-                    {/* Mobile Hamburger Button */}
                     <IconButton
                         color="black"
                         edge="end"
@@ -128,21 +97,14 @@ const Navbar = () => {
             >
                 <List>
                     {navItems.map((item) => (
-                        <ListItem
-                            button
-                            key={item}
-                            onClick={() => scrollToSection(item.toLowerCase())}
-                        >
-                            <ListItemText
-                                primary={item}
-                                sx={{ textAlign: "center", color: "#000" }}
-                            />
+                        <ListItem button key={item} onClick={() => scrollToSection(item.toLowerCase())}>
+                            <ListItemText primary={item} sx={{ textAlign: "center", color: "#000" }} />
                         </ListItem>
                     ))}
                 </List>
             </Drawer>
 
-            {/* Main Sections Container */}
+            {/* Main Container */}
             <Container
                 sx={{
                     minHeight: "100vh",
@@ -151,9 +113,8 @@ const Navbar = () => {
                     maxWidth: "100% !important",
                 }}
             >
-                {/* Home Section */}
                 {isMobile ? (
-                    // Mobile Layout: Model on top, text below
+                    // Mobile View: Model on top, text below.
                     <Box
                         id="home"
                         sx={{
@@ -166,8 +127,7 @@ const Navbar = () => {
                             paddingTop: "20px",
                         }}
                     >
-                        {/* Model Box: Takes half of the viewport height */}
-                        <Box sx={{ width: "100%", height: "80vh" }}>
+                        <Box sx={{ width: "100%", height: "90vh" }}>
                             <Canvas
                                 style={{ width: "100%", height: "100%" }}
                                 camera={{ position: [10, 360, -400], fov: 50 }}
@@ -175,7 +135,21 @@ const Navbar = () => {
                                 <ambientLight intensity={0.7} />
                                 <directionalLight position={[10, 10, 5]} intensity={1.5} />
                                 <Environment preset="sunset" />
-                                <Model />
+                                <primitive
+                                    object={scene}
+                                    // Position: [-70, -70, 0]
+                                    //  - X: -70 shifts the model 70 units to the left.
+                                    //  - Y: -70 shifts the model 70 units downward.
+                                    //  - Z: 0 means no forward/backward movement.
+                                    position={[modelScaleFlag ? -160 : -110, -100, 0]}
+                                    // Rotation: [0, 2, 0]
+                                    //  - 0: no tilt forward/backward.
+                                    //  - 2: rotates the model 2 radians (~114.6°) about the Y-axis.
+                                    //  - 0: no roll.
+                                    rotation={[0, 2, 0]}
+                                    // Scale remains 1.6 regardless.
+                                    scale={1.6}
+                                />
                                 <OrbitControls
                                     enablePan={false}
                                     enableZoom={false}
@@ -184,27 +158,29 @@ const Navbar = () => {
                                 />
                             </Canvas>
                         </Box>
-                        {/* Text below the model */}
-                        <Typography
-                            variant="h1"
-                            sx={{
-                                fontSize: "15vw",
-                                textTransform: "uppercase",
-                                letterSpacing: "1.5vw",
-                                color: "#000", // Fully black text
-                                textShadow: `
-                  10px 10px 20px rgba(0, 0, 0, 0.6), 
-                  20px 20px 40px rgba(0, 0, 0, 0.4),
-                  30px 30px 60px rgba(0, 0, 0, 0.2)
-                `,
-                                mt: 2,
-                            }}
-                        >
-                            MADZILLA
-                        </Typography>
+                        {/* Only show text if modelScaleFlag is false */}
+                        {!modelScaleFlag && (
+                            <Typography
+                                variant="h1"
+                                sx={{
+                                    fontSize: "15vw",
+                                    textTransform: "uppercase",
+                                    letterSpacing: "1.5vw",
+                                    color: "#000",
+                                    textShadow: `
+                    10px 10px 20px rgba(0, 0, 0, 0.6), 
+                    20px 20px 40px rgba(0, 0, 0, 0.4),
+                    30px 30px 60px rgba(0, 0, 0, 0.2)
+                  `,
+                                    mt: 2,
+                                }}
+                            >
+                                MADZILLA
+                            </Typography>
+                        )}
                     </Box>
                 ) : (
-                    // Desktop Layout: Model with text overlay
+                    // Desktop View: Model with text overlay.
                     <Box
                         id="home"
                         sx={{
@@ -225,14 +201,28 @@ const Navbar = () => {
                                 left: 0,
                                 width: "100%",
                                 height: "100%",
-                                zIndex: 1, // Places the model behind the text
+                                zIndex: 1,
                             }}
                             camera={{ position: [10, 360, -400], fov: 50 }}
                         >
                             <ambientLight intensity={0.7} />
                             <directionalLight position={[10, 10, 5]} intensity={1.5} />
                             <Environment preset="sunset" />
-                            <Model />
+                            <primitive
+                                object={scene}
+                                // Position: [-70, -70, 0]
+                                //  - X: -70 shifts the model 70 units to the left.
+                                //  - Y: -70 shifts the model 70 units downward.
+                                //  - Z: 0 means no forward/backward movement.
+                                position={[modelScaleFlag ? -160 : -110, -100, 0]}
+                                // Rotation: [0, 2, 0]
+                                //  - 0: no tilt.
+                                //  - 2: rotates the model 2 radians (~114.6°) about the Y-axis.
+                                //  - 0: no roll.
+                                rotation={[0, 2, 0]}
+                                // Scale remains 1.6.
+                                scale={1.6}
+                            />
                             <OrbitControls
                                 enablePan={false}
                                 enableZoom={false}
