@@ -6,10 +6,10 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart"; // Amazon icon
 
 // List of available 3D models
 const models = [
-    { id: 1, path: "/assets/modelGreen.glb", name: "Green" },
-    { id: 2, path: "/assets/modelRed.glb", name: "Red" },
-    { id: 3, path: "/assets/modelWhite.glb", name: "White" },
-    { id: 4, path: "/assets/modelBlue.glb", name: "Blue" },
+    { id: 1, path: process.env.PUBLIC_URL + "/assets/modelGreen.glb", name: "Green" },
+    { id: 2, path: process.env.PUBLIC_URL + "/assets/modelRed.glb", name: "Red" },
+    { id: 3, path: process.env.PUBLIC_URL + "/assets/modelWhite.glb", name: "White" },
+    { id: 4, path: process.env.PUBLIC_URL + "/assets/modelBlue.glb", name: "Blue" },
 ];
 
 // Component to load a 3D model
