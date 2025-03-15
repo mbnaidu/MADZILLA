@@ -48,9 +48,7 @@ const InfoChips = () => {
                 "Designed for hassle-free cleaning and part replacement, ensuring longevity.",
         },
     ];
-
     const [selectedChip, setSelectedChip] = useState(0);
-
     return (
         <Box sx={{ width: "100%" }}>
             <Box
@@ -95,7 +93,7 @@ const InfoChips = () => {
             </Box>
         </Box>
     );
-};
+}
 
 const Navbar = () => {
     const { scene } = useGLTF("/assets/model.glb");
@@ -103,7 +101,9 @@ const Navbar = () => {
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const navItems = ["About", "Products", "Contact"];
     const [modelScaleFlag, setModelScaleFlag] = useState(window.innerWidth < 600);
-
+    const targetRotation = 2; // Target final rotation angle
+    const [rotationY, setRotationY] = useState(0);
+    const [isRotating, setIsRotating] = useState(true);
     useEffect(() => {
         const handleResize = () => {
             setModelScaleFlag(window.innerWidth < 600);
@@ -111,10 +111,22 @@ const Navbar = () => {
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
-
+    useEffect(() => {
+        if (!isRotating) return;
+        const interval = setInterval(() => {
+            setRotationY((prev) => {
+                if (prev >= targetRotation) {
+                    clearInterval(interval);
+                    setIsRotating(false);
+                    return targetRotation; // Stop exactly at target rotation
+                }
+                return prev + 0.05; // Smoothly rotate
+            });
+        }, 50);
+        return () => clearInterval(interval);
+    }, [isRotating]);
     const [mobileOpen, setMobileOpen] = useState(false);
     const handleDrawerToggle = () => setMobileOpen((prev) => !prev);
-
     const scrollToSection = (id) => {
         const section = document.getElementById(id);
         if (section) {
@@ -122,7 +134,6 @@ const Navbar = () => {
         }
         setMobileOpen(false);
     };
-
     return (
         <>
             <AppBar position="sticky" sx={{ background: "#fff" }}>
@@ -161,7 +172,6 @@ const Navbar = () => {
                     </IconButton>
                 </Toolbar>
             </AppBar>
-
             <Drawer
                 anchor="right"
                 open={mobileOpen}
@@ -176,7 +186,6 @@ const Navbar = () => {
                     ))}
                 </List>
             </Drawer>
-
             <Container
                 sx={{
                     minHeight: "100vh",
@@ -266,7 +275,7 @@ const Navbar = () => {
                             <primitive
                                 object={scene}
                                 position={[modelScaleFlag ? -160 : -110, -100, 0]}
-                                rotation={[0, 2, 0]}
+                                rotation={[0, rotationY, 0]} // Rotating smoothly until target
                                 scale={1.6}
                             />
                             <OrbitControls enablePan={false} enableZoom={false} maxPolarAngle={Math.PI / 2} minPolarAngle={1.5} />
@@ -280,17 +289,16 @@ const Navbar = () => {
                                 letterSpacing: { xs: "1vw", sm: "1.5vw", md: "2vw", lg: "2.5vw" },
                                 color: "#000",
                                 textShadow: `
-                                    10px 10px 20px rgba(0, 0, 0, 0.6), 
-                                    20px 20px 40px rgba(0, 0, 0, 0.4),
-                                    30px 30px 60px rgba(0, 0, 0, 0.2)
-                                    `,
+                                                10px 10px 20px rgba(0, 0, 0, 0.6), 
+                                                20px 20px 40px rgba(0, 0, 0, 0.4),
+                                                30px 30px 60px rgba(0, 0, 0, 0.2)
+                                            `,
                             }}
                         >
                             MADZILLA
                         </Typography>
                     </Box>
                 )}
-
                 <Box
                     id="about"
                     sx={{
@@ -310,7 +318,6 @@ const Navbar = () => {
                     <Typography variant="body1" sx={{ maxWidth: "600px", color: "#FFF", mb: 5 }}>
                         We offer high-quality, natural products with long-term durability and hassle-free replacement options.
                     </Typography>
-
                     <Box
                         sx={{
                             mb: 5,
@@ -349,13 +356,13 @@ const Navbar = () => {
                             <Typography variant="h6" sx={{ fontWeight: "bold", mt: 2, color: "#FFF" }}>
                                 Natural
                             </Typography>
-                            <Typography variant="body2" sx={{ color: "#FFF", mt: 1, color: "#FFF"  }}>
+                            <Typography variant="body2" sx={{ color: "#FFF", mt: 1, color: "#FFF" }}>
                                 Made from 100% natural ingredients, free from harmful chemicals.
                             </Typography>
                         </Grid2>
                         <Grid2 xs={12} sm={4} textAlign="center">
                             <VerifiedIcon sx={{ fontSize: 50, color: "#FF9800" }} />
-                            <Typography variant="h6" sx={{ fontWeight: "bold", mt: 2, color: "#FFF"  }}>
+                            <Typography variant="h6" sx={{ fontWeight: "bold", mt: 2, color: "#FFF" }}>
                                 5+ Year Warranty
                             </Typography>
                             <Typography variant="body2" sx={{ color: "#FFF", mt: 1 }}>
@@ -364,7 +371,7 @@ const Navbar = () => {
                         </Grid2>
                         <Grid2 xs={12} sm={4} textAlign="center">
                             <SwapHorizIcon sx={{ fontSize: 50, color: "#2196F3" }} />
-                            <Typography variant="h6" sx={{ fontWeight: "bold", mt: 2, color: "#FFF"  }}>
+                            <Typography variant="h6" sx={{ fontWeight: "bold", mt: 2, color: "#FFF" }}>
                                 Replacement Options
                             </Typography>
                             <Typography variant="body2" sx={{ color: "#FFF", mt: 1 }}>
@@ -373,7 +380,7 @@ const Navbar = () => {
                         </Grid2>
                         <Grid2 xs={12} sm={3} textAlign="center">
                             <ShoppingCartIcon sx={{ fontSize: 50, color: "#FF5733" }} />
-                            <Typography variant="h6" sx={{ fontWeight: "bold", mt: 2, color: "#FFF"  }}>
+                            <Typography variant="h6" sx={{ fontWeight: "bold", mt: 2, color: "#FFF" }}>
                                 Amazon
                             </Typography>
                             <Typography variant="body2" sx={{ color: "#FFF", mt: 1 }}>
