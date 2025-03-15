@@ -98,7 +98,8 @@ const InfoChips = () => {
 }
 
 const Navbar = () => {
-    const { scene } = useGLTF("/assets/model.glb");
+    const modelPath = process.env.PUBLIC_URL + "/assets/model.glb";
+    const { scene } = useGLTF(modelPath);
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const navItems = ["About", "Products", "Contact"];
