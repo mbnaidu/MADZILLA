@@ -78,12 +78,12 @@ const ProductShowcase = () => {
                 <Button
                     variant="contained"
                     sx={{
-                        backgroundColor: "#FFA41C",
+                        backgroundColor: "#4262ff",
                         color: "#fff",
                         fontSize: { xs: "14px", md: "16px" },
                         padding: { xs: "8px 16px", md: "12px 24px" },
                         textTransform: "uppercase",
-                        "&:hover": { backgroundColor: "#FF8C00" },
+                        "&:hover": { backgroundColor: "#4262ff" },
                         display: "flex",
                         alignItems: "center",
                         gap: 1,
