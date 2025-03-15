@@ -23,6 +23,8 @@ import SpaIcon from "@mui/icons-material/Spa";
 import VerifiedIcon from "@mui/icons-material/Verified";
 import SwapHorizIcon from "@mui/icons-material/SwapHorizSharp";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import ProductShowcase from "./ProductShowcase";
+import ContactSection from "./ContactSection";
 
 // InfoChips component defined above
 const InfoChips = () => {
@@ -378,7 +380,7 @@ const Navbar = () => {
                                 Hassle-free replacement policy to ensure your satisfaction.
                             </Typography>
                         </Grid2>
-                        <Grid2 xs={12} sm={3} textAlign="center">
+                        {/* <Grid2 xs={12} sm={3} textAlign="center">
                             <ShoppingCartIcon sx={{ fontSize: 50, color: "#FF5733" }} />
                             <Typography variant="h6" sx={{ fontWeight: "bold", mt: 2, color: "#FFF" }}>
                                 Amazon
@@ -399,7 +401,7 @@ const Navbar = () => {
                             >
                                 Shop Now
                             </Button>
-                        </Grid2>
+                        </Grid2> */}
                     </Grid2>
                 </Box>
                 <Box
@@ -409,22 +411,21 @@ const Navbar = () => {
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        background: "#c0c0c0",
+                        background: "white",
                     }}
                 >
-                    <Typography variant="h3">Products</Typography>
+                    <ProductShowcase/>
                 </Box>
                 <Box
                     id="contact"
                     sx={{
-                        height: "100vh",
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
                         background: "#b0b0b0",
                     }}
                 >
-                    <Typography variant="h3">Contact Us</Typography>
+                    <ContactSection/>
                 </Box>
             </Container>
         </>
