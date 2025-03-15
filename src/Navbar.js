@@ -13,20 +13,95 @@ import {
     Container,
     useMediaQuery,
     useTheme,
+    Grid2,
+    Chip,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, useGLTF, Environment } from "@react-three/drei";
+import SpaIcon from "@mui/icons-material/Spa";
+import VerifiedIcon from "@mui/icons-material/Verified";
+import SwapHorizIcon from "@mui/icons-material/SwapHorizSharp";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+
+// InfoChips component defined above
+const InfoChips = () => {
+    const infoData = [
+        {
+            title: "Humidifier Benefits",
+            content:
+                "Maintains optimal humidity, prevents dry skin, and reduces respiratory issues.",
+        },
+        {
+            title: "Energy Efficiency",
+            content:
+                "Consumes low power while providing maximum performance for everyday use.",
+        },
+        {
+            title: "Smart Features",
+            content:
+                "Integrated with smart technology for remote control and monitoring via mobile app.",
+        },
+        {
+            title: "Easy Maintenance",
+            content:
+                "Designed for hassle-free cleaning and part replacement, ensuring longevity.",
+        },
+    ];
+
+    const [selectedChip, setSelectedChip] = useState(0);
+
+    return (
+        <Box sx={{ width: "100%" }}>
+            <Box
+                sx={{
+                    display: "flex",
+                    gap: 2,
+                    overflowX: "auto",
+                    mb: 2,
+                    paddingX: 1,
+                    "&::-webkit-scrollbar": { display: "none" },
+                    msOverflowStyle: "none",
+                    scrollbarWidth: "none",
+                }}
+            >
+                {infoData.map((item, index) => (
+                    <Chip
+                        key={item.title}
+                        label={item.title}
+                        onClick={() => setSelectedChip(index)}
+                        clickable
+                        variant={selectedChip === index ? "filled" : "outlined"}
+                        color="info"
+                        sx={{ flexShrink: 0, fontWeight: "bold" }}
+                    />
+                ))}
+            </Box>
+            <Box
+                sx={{
+                    backgroundColor: "#f7f7f7",
+                    borderRadius: 2,
+                    p: 2,
+                    boxShadow: 3,
+                    textAlign: "left",
+                }}
+            >
+                <Typography variant="h6" sx={{ fontWeight: "bold", color: "#2F4F4F", mb: 1 }}>
+                    {infoData[selectedChip].title}
+                </Typography>
+                <Typography variant="body2" sx={{ color: "#555" }}>
+                    {infoData[selectedChip].content}
+                </Typography>
+            </Box>
+        </Box>
+    );
+};
 
 const Navbar = () => {
-    // Load the GLTF scene
     const { scene } = useGLTF("/assets/model.glb");
-
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-    const navItems = ["Products", "Videos", "Contact"];
-
-    // Boolean flag: true if window width is less than 600px (mobile), false otherwise.
+    const navItems = ["About", "Products", "Contact"];
     const [modelScaleFlag, setModelScaleFlag] = useState(window.innerWidth < 600);
 
     useEffect(() => {
@@ -50,7 +125,6 @@ const Navbar = () => {
 
     return (
         <>
-            {/* Navbar Header */}
             <AppBar position="sticky" sx={{ background: "#fff" }}>
                 <Toolbar>
                     <Typography
@@ -88,7 +162,6 @@ const Navbar = () => {
                 </Toolbar>
             </AppBar>
 
-            {/* Mobile Drawer */}
             <Drawer
                 anchor="right"
                 open={mobileOpen}
@@ -104,7 +177,6 @@ const Navbar = () => {
                 </List>
             </Drawer>
 
-            {/* Main Container */}
             <Container
                 sx={{
                     minHeight: "100vh",
@@ -114,7 +186,6 @@ const Navbar = () => {
                 }}
             >
                 {isMobile ? (
-                    // Mobile View: Model on top, text below.
                     <Box
                         id="home"
                         sx={{
@@ -137,28 +208,13 @@ const Navbar = () => {
                                 <Environment preset="sunset" />
                                 <primitive
                                     object={scene}
-                                    // Position: [-70, -70, 0]
-                                    //  - X: -70 shifts the model 70 units to the left.
-                                    //  - Y: -70 shifts the model 70 units downward.
-                                    //  - Z: 0 means no forward/backward movement.
                                     position={[modelScaleFlag ? -160 : -110, -100, 0]}
-                                    // Rotation: [0, 2, 0]
-                                    //  - 0: no tilt forward/backward.
-                                    //  - 2: rotates the model 2 radians (~114.6°) about the Y-axis.
-                                    //  - 0: no roll.
                                     rotation={[0, 2, 0]}
-                                    // Scale remains 1.6 regardless.
                                     scale={1.6}
                                 />
-                                <OrbitControls
-                                    enablePan={false}
-                                    enableZoom={false}
-                                    maxPolarAngle={Math.PI / 2}
-                                    minPolarAngle={1.5}
-                                />
+                                <OrbitControls enablePan={false} enableZoom={false} maxPolarAngle={Math.PI / 2} minPolarAngle={1.5} />
                             </Canvas>
                         </Box>
-                        {/* Only show text if modelScaleFlag is false */}
                         {!modelScaleFlag && (
                             <Typography
                                 variant="h1"
@@ -168,10 +224,10 @@ const Navbar = () => {
                                     letterSpacing: "1.5vw",
                                     color: "#000",
                                     textShadow: `
-                    10px 10px 20px rgba(0, 0, 0, 0.6), 
-                    20px 20px 40px rgba(0, 0, 0, 0.4),
-                    30px 30px 60px rgba(0, 0, 0, 0.2)
-                  `,
+                                        10px 10px 20px rgba(0, 0, 0, 0.6), 
+                                        20px 20px 40px rgba(0, 0, 0, 0.4),
+                                        30px 30px 60px rgba(0, 0, 0, 0.2)
+                                    `,
                                     mt: 2,
                                 }}
                             >
@@ -180,7 +236,6 @@ const Navbar = () => {
                         )}
                     </Box>
                 ) : (
-                    // Desktop View: Model with text overlay.
                     <Box
                         id="home"
                         sx={{
@@ -210,25 +265,11 @@ const Navbar = () => {
                             <Environment preset="sunset" />
                             <primitive
                                 object={scene}
-                                // Position: [-70, -70, 0]
-                                //  - X: -70 shifts the model 70 units to the left.
-                                //  - Y: -70 shifts the model 70 units downward.
-                                //  - Z: 0 means no forward/backward movement.
                                 position={[modelScaleFlag ? -160 : -110, -100, 0]}
-                                // Rotation: [0, 2, 0]
-                                //  - 0: no tilt.
-                                //  - 2: rotates the model 2 radians (~114.6°) about the Y-axis.
-                                //  - 0: no roll.
                                 rotation={[0, 2, 0]}
-                                // Scale remains 1.6.
                                 scale={1.6}
                             />
-                            <OrbitControls
-                                enablePan={false}
-                                enableZoom={false}
-                                maxPolarAngle={Math.PI / 2}
-                                minPolarAngle={1.5}
-                            />
+                            <OrbitControls enablePan={false} enableZoom={false} maxPolarAngle={Math.PI / 2} minPolarAngle={1.5} />
                         </Canvas>
                         <Typography
                             variant="h1"
@@ -239,10 +280,10 @@ const Navbar = () => {
                                 letterSpacing: { xs: "1vw", sm: "1.5vw", md: "2vw", lg: "2.5vw" },
                                 color: "#000",
                                 textShadow: `
-                  10px 10px 20px rgba(0, 0, 0, 0.6), 
-                  20px 20px 40px rgba(0, 0, 0, 0.4),
-                  30px 30px 60px rgba(0, 0, 0, 0.2)
-                `,
+                                    10px 10px 20px rgba(0, 0, 0, 0.6), 
+                                    20px 20px 40px rgba(0, 0, 0, 0.4),
+                                    30px 30px 60px rgba(0, 0, 0, 0.2)
+                                    `,
                             }}
                         >
                             MADZILLA
@@ -250,23 +291,112 @@ const Navbar = () => {
                     </Box>
                 )}
 
-                {/* PRODUCTS Section */}
                 <Box
-                    id="products"
+                    id="about"
                     sx={{
-                        height: "100vh",
+                        minHeight: "100vh",
                         display: "flex",
+                        flexDirection: "column",
                         alignItems: "center",
                         justifyContent: "center",
-                        background: "#d0d0d0",
+                        background: "#000",
+                        textAlign: "center",
+                        padding: "50px 20px",
                     }}
                 >
-                    <Typography variant="h3">Our Products</Typography>
-                </Box>
+                    <Typography variant="h3" sx={{ color: "#FFF", fontWeight: "bold", mb: 2 }}>
+                        WHY CHOOSE OUR PRODUCTS?
+                    </Typography>
+                    <Typography variant="body1" sx={{ maxWidth: "600px", color: "#FFF", mb: 5 }}>
+                        We offer high-quality, natural products with long-term durability and hassle-free replacement options.
+                    </Typography>
 
-                {/* VIDEOS Section */}
+                    <Box
+                        sx={{
+                            mb: 5,
+                            display: "flex",
+                            flexDirection: { xs: "column", md: "row" },
+                            alignItems: "flex-start",
+                            justifyContent: "center",
+                            gap: 4,
+                            width: "100%",
+                        }}
+                    >
+                        <Box sx={{ width: { xs: "100%", md: "60%" }, textAlign: "center" }}>
+                            <video
+                                width="100%"
+                                controls
+                                controlsList="nodownload"
+                                disablePictureInPicture
+                                onContextMenu={(e) => e.preventDefault()}
+                                style={{
+                                    maxWidth: "100%",
+                                    borderRadius: "10px",
+                                    boxShadow: "0px 4px 10px rgba(0,0,0,0.2)",
+                                }}
+                            >
+                                <source src="/assets/product-video.mp4" type="video/mp4" />
+                                Your browser does not support the video tag.
+                            </video>
+                        </Box>
+                        <Box sx={{ width: { xs: "100%", md: "40%" } }}>
+                            <InfoChips />
+                        </Box>
+                    </Box>
+                    <Grid2 container spacing={4} justifyContent="center">
+                        <Grid2 xs={12} sm={4} textAlign="center">
+                            <SpaIcon sx={{ fontSize: 50, color: "#4CAF50" }} />
+                            <Typography variant="h6" sx={{ fontWeight: "bold", mt: 2, color: "#FFF" }}>
+                                Natural
+                            </Typography>
+                            <Typography variant="body2" sx={{ color: "#FFF", mt: 1, color: "#FFF"  }}>
+                                Made from 100% natural ingredients, free from harmful chemicals.
+                            </Typography>
+                        </Grid2>
+                        <Grid2 xs={12} sm={4} textAlign="center">
+                            <VerifiedIcon sx={{ fontSize: 50, color: "#FF9800" }} />
+                            <Typography variant="h6" sx={{ fontWeight: "bold", mt: 2, color: "#FFF"  }}>
+                                5+ Year Warranty
+                            </Typography>
+                            <Typography variant="body2" sx={{ color: "#FFF", mt: 1 }}>
+                                Guaranteed durability with over 5 years of manufacturer warranty.
+                            </Typography>
+                        </Grid2>
+                        <Grid2 xs={12} sm={4} textAlign="center">
+                            <SwapHorizIcon sx={{ fontSize: 50, color: "#2196F3" }} />
+                            <Typography variant="h6" sx={{ fontWeight: "bold", mt: 2, color: "#FFF"  }}>
+                                Replacement Options
+                            </Typography>
+                            <Typography variant="body2" sx={{ color: "#FFF", mt: 1 }}>
+                                Hassle-free replacement policy to ensure your satisfaction.
+                            </Typography>
+                        </Grid2>
+                        <Grid2 xs={12} sm={3} textAlign="center">
+                            <ShoppingCartIcon sx={{ fontSize: 50, color: "#FF5733" }} />
+                            <Typography variant="h6" sx={{ fontWeight: "bold", mt: 2, color: "#FFF"  }}>
+                                Amazon
+                            </Typography>
+                            <Typography variant="body2" sx={{ color: "#FFF", mt: 1 }}>
+                                Buy now from Amazon with fast shipping and easy returns.
+                            </Typography>
+                            <Button
+                                variant="contained"
+                                sx={{
+                                    mt: 2,
+                                    backgroundColor: "#FF9900",
+                                    color: "#fff",
+                                    "&:hover": { backgroundColor: "#E68900" },
+                                }}
+                                href="https://www.amazon.com"
+                                target="_blank"
+                            >
+                                Shop Now
+                            </Button>
+                        </Grid2>
+                    </Grid2>
+                </Box>
                 <Box
-                    id="videos"
+                    id="products"
                     sx={{
                         height: "100vh",
                         display: "flex",
@@ -275,10 +405,8 @@ const Navbar = () => {
                         background: "#c0c0c0",
                     }}
                 >
-                    <Typography variant="h3">Videos</Typography>
+                    <Typography variant="h3">Products</Typography>
                 </Box>
-
-                {/* CONTACT Section */}
                 <Box
                     id="contact"
                     sx={{
