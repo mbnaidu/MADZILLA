@@ -345,7 +345,7 @@ const Navbar = () => {
                                     boxShadow: "0px 4px 10px rgba(0,0,0,0.2)",
                                 }}
                             >
-                                <source src="/assets/product-video.mp4" type="video/mp4" />
+                                <source src={process.env.PUBLIC_URL + "/assets/product-video.mp4"} type="video/mp4" />
                                 Your browser does not support the video tag.
                             </video>
                         </Box>
