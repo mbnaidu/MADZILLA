@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/MADZILLA/static/css/main.9de3f66d.css",
+    "main.js": "/MADZILLA/static/js/main.cb7a8b85.js",
+    "index.html": "/MADZILLA/index.html",
+    "main.9de3f66d.css.map": "/MADZILLA/static/css/main.9de3f66d.css.map",
+    "main.cb7a8b85.js.map": "/MADZILLA/static/js/main.cb7a8b85.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.9de3f66d.css",
+    "static/js/main.cb7a8b85.js"
+  ]
+}
