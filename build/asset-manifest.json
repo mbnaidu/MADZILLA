@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/MADZILLA/static/css/main.9de3f66d.css",
-    "main.js": "/MADZILLA/static/js/main.a5d00de5.js",
+    "main.js": "/MADZILLA/static/js/main.d0e69219.js",
     "index.html": "/MADZILLA/index.html",
     "main.9de3f66d.css.map": "/MADZILLA/static/css/main.9de3f66d.css.map",
-    "main.a5d00de5.js.map": "/MADZILLA/static/js/main.a5d00de5.js.map"
+    "main.d0e69219.js.map": "/MADZILLA/static/js/main.d0e69219.js.map"
   },
   "entrypoints": [
     "static/css/main.9de3f66d.css",
-    "static/js/main.a5d00de5.js"
+    "static/js/main.d0e69219.js"
   ]
 }

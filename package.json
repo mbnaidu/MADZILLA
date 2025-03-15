@@ -1,7 +1,7 @@
 {
+  "homepage": "http://mbnaidu.github.io/MADZILLA",
   "name": "react",
   "version": "0.0.0",
-  "homepage": "https://mbnaidu.github.io/MADZILLA",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.14.0",
