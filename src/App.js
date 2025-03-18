@@ -34,7 +34,8 @@ const App = () => {
     const targetRotation = 2; // Target final rotation angle
     const [rotationY, setRotationY] = useState(0);
     const [isRotating, setIsRotating] = useState(true);
-    const [viewMode, setViewMode] = useState("2d"); // "3d" or "2d"
+    const [viewMode, setViewMode] = useState("3d");
+    const [isLoading, setIsLoading] = useState(true); // Splash screen state
 
     useEffect(() => {
         const handleResize = () => {
@@ -42,6 +43,12 @@ const App = () => {
         };
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
+    }, []);
+    useEffect(() => {
+        setTimeout(() => {
+            setIsLoading(false);
+            setIsRotating(true); // Start rotation after splash
+        }, 2000);
     }, []);
 
     useEffect(() => {
@@ -51,9 +58,9 @@ const App = () => {
                 if (prev >= targetRotation) {
                     clearInterval(interval);
                     setIsRotating(false);
-                    return targetRotation; // Stop exactly at target rotation
+                    return targetRotation;
                 }
-                return prev + 0.05; // Smoothly rotate
+                return prev + 0.05;
             });
         }, 50);
         return () => clearInterval(interval);
@@ -102,6 +109,41 @@ const App = () => {
             "60%": { transform: "translateY(-5px)" },
         },
     };
+    if (isLoading) {
+        return (
+            <Box
+                sx={{
+                    width: "100vw",
+                    height: "100vh",
+                    backgroundColor: "black",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    transition: "opacity 0.5s ease-in-out",
+                }}
+            >
+                <Typography
+                    variant="h1"
+                    sx={{
+                        fontSize: "10vw",
+                        color: "#fff",
+                        textTransform: "uppercase",
+                        letterSpacing: "1.5vw",
+                        fontWeight: "bold",
+                        opacity: 0,
+                        animation: "fadeIn 1.5s ease-in-out forwards",
+                        "@keyframes fadeIn": {
+                            "0%": { opacity: 0 },
+                            "100%": { opacity: 1 },
+                        },
+                    }}
+                >
+                    MADZILLA
+                </Typography>
+            </Box>
+        );
+    }
+
     return (
         <>
             <AppBar position="sticky" sx={{ background: "#fff" }}>
