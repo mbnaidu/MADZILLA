@@ -71,12 +71,13 @@ const App = () => {
     };
 
     const scrollToNextSection = () => {
-        const sections = ["home", "about", "products", "contact"];
+        const sections = ["about", "products", "contact"];
         const currentScroll = window.scrollY;
         for (let i = 0; i < sections.length; i++) {
             const section = document.getElementById(sections[i]);
             if (section && section.offsetTop > currentScroll + 50) {
                 section.scrollIntoView({ behavior: "smooth" });
+                setViewMode("2d");
                 return;
             }
         }
