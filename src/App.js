@@ -84,6 +84,16 @@ const App = () => {
         window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
+    // Bounce animation sx object
+    const bounceAnimation = {
+        animation: "bounce 2s infinite",
+        "@keyframes bounce": {
+            "0%, 20%, 50%, 80%, 100%": { transform: "translateY(0)" },
+            "40%": { transform: "translateY(-10px)" },
+            "60%": { transform: "translateY(-5px)" },
+        },
+    };
+
     return (
         <>
             <AppBar position="sticky" sx={{ background: "#fff" }}>
@@ -187,13 +197,13 @@ const App = () => {
                                     sx={{
                                         width: "100%",
                                         height: "100%",
-                                        objectFit: "cover",
+                                        objectFit: "none",
                                         display: "block",
                                         margin: "auto",
                                     }}
                                 />
                             )}
-                            {/* Toggle FAB at top-right corner */}
+                            {/* Toggle FAB with bounce animation at top-right corner */}
                             <Fab
                                 onClick={() => setViewMode(viewMode === "3d" ? "2d" : "3d")}
                                 sx={{
@@ -202,6 +212,7 @@ const App = () => {
                                     right: 16,
                                     backgroundColor: "black",
                                     color: "#fff",
+                                    ...bounceAnimation,
                                 }}
                                 size="small"
                             >
@@ -306,7 +317,7 @@ const App = () => {
                         >
                             MADZILLA
                         </Typography>
-                        {/* Toggle FAB at top-right corner */}
+                        {/* Toggle FAB with bounce animation at top-right corner */}
                         <Fab
                             onClick={() => setViewMode(viewMode === "3d" ? "2d" : "3d")}
                             sx={{
@@ -315,6 +326,7 @@ const App = () => {
                                 right: 16,
                                 backgroundColor: "black",
                                 color: "#fff",
+                                ...bounceAnimation,
                             }}
                             size="small"
                         >
@@ -326,11 +338,11 @@ const App = () => {
                 <Products />
                 <Contact />
             </Container>
-            {/* Scroll-to-next-section FAB (visible only on mobile) */}
+            {/* Scroll-to-next-section FAB visible on all screens */}
             <Fab
                 onClick={scrollToNextSection}
                 sx={{
-                    display: { xs: "flex", md: "none" },
+                    display: "flex",
                     position: "fixed",
                     bottom: 16,
                     right: 16,
