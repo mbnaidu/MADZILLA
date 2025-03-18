@@ -87,14 +87,21 @@ const App = () => {
 
     // Bounce animation sx object
     const bounceAnimation = {
-        animation: "bounce 2s infinite",
+        animation: "bounce 3s infinite",
         "@keyframes bounce": {
             "0%, 20%, 50%, 80%, 100%": { transform: "translateY(0)" },
             "40%": { transform: "translateY(-10px)" },
             "60%": { transform: "translateY(-5px)" },
         },
     };
-
+    const bounceDownAnimation = {
+        animation: "bounce 1s infinite",
+        "@keyframes bounce": {
+            "0%, 20%, 50%, 80%, 100%": { transform: "translateY(0)" },
+            "40%": { transform: "translateY(-10px)" },
+            "60%": { transform: "translateY(-5px)" },
+        },
+    };
     return (
         <>
             <AppBar position="sticky" sx={{ background: "#fff" }}>
@@ -350,6 +357,7 @@ const App = () => {
                     backgroundColor: "black",
                     color: "#fff",
                     zIndex: 1000,
+                    ...bounceDownAnimation,
                 }}
             >
                 <KeyboardArrowDownIcon />
