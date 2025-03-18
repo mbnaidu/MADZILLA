@@ -34,7 +34,7 @@ const App = () => {
     const targetRotation = 2; // Target final rotation angle
     const [rotationY, setRotationY] = useState(0);
     const [isRotating, setIsRotating] = useState(true);
-    const [viewMode, setViewMode] = useState("3d");
+    const [viewMode, setViewMode] = useState("2d");
     const [isLoading, setIsLoading] = useState(true); // Splash screen state
 
     useEffect(() => {
@@ -109,6 +109,7 @@ const App = () => {
             "60%": { transform: "translateY(-5px)" },
         },
     };
+
     if (isLoading) {
         return (
             <Box
@@ -143,6 +144,17 @@ const App = () => {
             </Box>
         );
     }
+
+    // Updated toggle onClick handler: When switching to "3d", reset rotation and start rotating
+    const handleToggleView = () => {
+        if (viewMode === "2d") {
+            setRotationY(0);
+            setIsRotating(true);
+            setViewMode("3d");
+        } else {
+            setViewMode("2d");
+        }
+    };
 
     return (
         <>
@@ -229,7 +241,7 @@ const App = () => {
                                     <primitive
                                         object={scene}
                                         position={[modelScaleFlag ? -160 : -110, -100, 0]}
-                                        rotation={[0, 2, 0]}
+                                        rotation={[0, rotationY, 0]} // Using animated rotation
                                         scale={1.6}
                                     />
                                     <OrbitControls
@@ -255,7 +267,7 @@ const App = () => {
                             )}
                             {/* Toggle FAB with bounce animation at top-right corner */}
                             <Fab
-                                onClick={() => setViewMode(viewMode === "3d" ? "2d" : "3d")}
+                                onClick={handleToggleView}
                                 sx={{
                                     position: "absolute",
                                     top: 16,
@@ -321,7 +333,7 @@ const App = () => {
                                 <primitive
                                     object={scene}
                                     position={[modelScaleFlag ? -160 : -110, -100, 0]}
-                                    rotation={[0, rotationY, 0]} // Rotating smoothly until target
+                                    rotation={[0, rotationY, 0]} // Using animated rotation
                                     scale={1.6}
                                 />
                                 <OrbitControls
@@ -369,7 +381,7 @@ const App = () => {
                         </Typography>
                         {/* Toggle FAB with bounce animation at top-right corner */}
                         <Fab
-                            onClick={() => setViewMode(viewMode === "3d" ? "2d" : "3d")}
+                            onClick={handleToggleView}
                             sx={{
                                 position: "absolute",
                                 top: 16,
