@@ -1,13 +1,17 @@
 {
   "files": {
-    "main.css": "/MADZILLA/static/css/main.9de3f66d.css",
-    "main.js": "/MADZILLA/static/js/main.3e8789e2.js",
+    "main.css": "/MADZILLA/static/css/main.14d69f4a.css",
+    "main.js": "/MADZILLA/static/js/main.a270f8cf.js",
+    "static/media/slick.svg": "/MADZILLA/static/media/slick.2630a3e3eab21c607e21.svg",
+    "static/media/slick.eot": "/MADZILLA/static/media/slick.a4e97f5a2a64f0ab1323.eot",
+    "static/media/slick.ttf": "/MADZILLA/static/media/slick.c94f7671dcc99dce43e2.ttf",
+    "static/media/slick.woff": "/MADZILLA/static/media/slick.295183786cd8a1389865.woff",
     "index.html": "/MADZILLA/index.html",
-    "main.9de3f66d.css.map": "/MADZILLA/static/css/main.9de3f66d.css.map",
-    "main.3e8789e2.js.map": "/MADZILLA/static/js/main.3e8789e2.js.map"
+    "main.14d69f4a.css.map": "/MADZILLA/static/css/main.14d69f4a.css.map",
+    "main.a270f8cf.js.map": "/MADZILLA/static/js/main.a270f8cf.js.map"
   },
   "entrypoints": [
-    "static/css/main.9de3f66d.css",
-    "static/js/main.3e8789e2.js"
+    "static/css/main.14d69f4a.css",
+    "static/js/main.a270f8cf.js"
   ]
 }
