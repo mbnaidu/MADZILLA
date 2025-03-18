@@ -1,8 +1,22 @@
 import React, { useState, useEffect } from "react";
 import {
-    AppBar, Toolbar, Typography, Button, IconButton, Drawer, List, ListItem, ListItemText, Box, Container, useMediaQuery, useTheme
+    AppBar,
+    Toolbar,
+    Typography,
+    Button,
+    IconButton,
+    Drawer,
+    List,
+    ListItem,
+    ListItemText,
+    Box,
+    Container,
+    useMediaQuery,
+    useTheme,
+    Fab
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, useGLTF, Environment } from "@react-three/drei";
 import About from "./components/About";
@@ -12,6 +26,7 @@ import Contact from "./components/Contact";
 const App = () => {
     const modelPath = process.env.PUBLIC_URL + "/assets/model.glb";
     const { scene } = useGLTF(modelPath);
+    const model2DPath = process.env.PUBLIC_URL + "/assets/Main.png"; // 2D image asset for toggling
     const theme = useTheme();
     const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
     const navItems = ["About", "Products", "Contact"];
@@ -19,6 +34,8 @@ const App = () => {
     const targetRotation = 2; // Target final rotation angle
     const [rotationY, setRotationY] = useState(0);
     const [isRotating, setIsRotating] = useState(true);
+    const [viewMode, setViewMode] = useState("2d"); // "3d" or "2d"
+
     useEffect(() => {
         const handleResize = () => {
             setModelScaleFlag(window.innerWidth < 600);
@@ -26,6 +43,7 @@ const App = () => {
         window.addEventListener("resize", handleResize);
         return () => window.removeEventListener("resize", handleResize);
     }, []);
+
     useEffect(() => {
         if (!isRotating) return;
         const interval = setInterval(() => {
@@ -40,8 +58,10 @@ const App = () => {
         }, 50);
         return () => clearInterval(interval);
     }, [isRotating]);
+
     const [mobileOpen, setMobileOpen] = useState(false);
     const handleDrawerToggle = () => setMobileOpen((prev) => !prev);
+
     const scrollToSection = (id) => {
         const section = document.getElementById(id);
         if (section) {
@@ -49,6 +69,21 @@ const App = () => {
         }
         setMobileOpen(false);
     };
+
+    const scrollToNextSection = () => {
+        const sections = ["home", "about", "products", "contact"];
+        const currentScroll = window.scrollY;
+        for (let i = 0; i < sections.length; i++) {
+            const section = document.getElementById(sections[i]);
+            if (section && section.offsetTop > currentScroll + 50) {
+                section.scrollIntoView({ behavior: "smooth" });
+                return;
+            }
+        }
+        // If reached the end, scroll to the top fully
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
     return (
         <>
             <AppBar position="sticky" sx={{ background: "#fff" }}>
@@ -122,22 +157,56 @@ const App = () => {
                             paddingTop: "20px",
                         }}
                     >
-                        <Box sx={{ width: "100%", height: "90vh" }}>
-                            <Canvas
-                                style={{ width: "100%", height: "100%" }}
-                                camera={{ position: [10, 360, -400], fov: 50 }}
-                            >
-                                <ambientLight intensity={0.7} />
-                                <directionalLight position={[10, 10, 5]} intensity={1.5} />
-                                <Environment preset="sunset" />
-                                <primitive
-                                    object={scene}
-                                    position={[modelScaleFlag ? -160 : -110, -100, 0]}
-                                    rotation={[0, 2, 0]}
-                                    scale={1.6}
+                        <Box sx={{ width: "100%", height: "90vh", position: "relative" }}>
+                            {viewMode === "3d" ? (
+                                <Canvas
+                                    style={{ width: "100%", height: "100%" }}
+                                    camera={{ position: [10, 360, -400], fov: 50 }}
+                                >
+                                    <ambientLight intensity={0.7} />
+                                    <directionalLight position={[10, 10, 5]} intensity={1.5} />
+                                    <Environment preset="sunset" />
+                                    <primitive
+                                        object={scene}
+                                        position={[modelScaleFlag ? -160 : -110, -100, 0]}
+                                        rotation={[0, 2, 0]}
+                                        scale={1.6}
+                                    />
+                                    <OrbitControls
+                                        enablePan={false}
+                                        enableZoom={false}
+                                        maxPolarAngle={Math.PI / 2}
+                                        minPolarAngle={1.5}
+                                    />
+                                </Canvas>
+                            ) : (
+                                <Box
+                                    component="img"
+                                    src={model2DPath}
+                                    alt="2D Model"
+                                    sx={{
+                                        width: "100%",
+                                        height: "100%",
+                                        objectFit: "cover",
+                                        display: "block",
+                                        margin: "auto",
+                                    }}
                                 />
-                                <OrbitControls enablePan={false} enableZoom={false} maxPolarAngle={Math.PI / 2} minPolarAngle={1.5} />
-                            </Canvas>
+                            )}
+                            {/* Toggle FAB at top-right corner */}
+                            <Fab
+                                onClick={() => setViewMode(viewMode === "3d" ? "2d" : "3d")}
+                                sx={{
+                                    position: "absolute",
+                                    top: 16,
+                                    right: 16,
+                                    backgroundColor: "black",
+                                    color: "#fff",
+                                }}
+                                size="small"
+                            >
+                                {viewMode === "3d" ? "2D" : "3D"}
+                            </Fab>
                         </Box>
                         {!modelScaleFlag && (
                             <Typography
@@ -173,51 +242,105 @@ const App = () => {
                             overflow: "hidden",
                         }}
                     >
-                        <Canvas
-                            style={{
-                                position: "absolute",
-                                top: 0,
-                                left: 0,
-                                width: "100%",
-                                height: "100%",
-                                zIndex: 1,
-                            }}
-                            camera={{ position: [10, 360, -400], fov: 50 }}
-                        >
-                            <ambientLight intensity={0.7} />
-                            <directionalLight position={[10, 10, 5]} intensity={1.5} />
-                            <Environment preset="sunset" />
-                            <primitive
-                                object={scene}
-                                position={[modelScaleFlag ? -160 : -110, -100, 0]}
-                                rotation={[0, rotationY, 0]} // Rotating smoothly until target
-                                scale={1.6}
+                        {viewMode === "3d" ? (
+                            <Canvas
+                                style={{
+                                    position: "absolute",
+                                    top: 0,
+                                    left: 0,
+                                    width: "100%",
+                                    height: "100%",
+                                    zIndex: 1,
+                                }}
+                                camera={{ position: [10, 360, -400], fov: 50 }}
+                            >
+                                <ambientLight intensity={0.7} />
+                                <directionalLight position={[10, 10, 5]} intensity={1.5} />
+                                <Environment preset="sunset" />
+                                <primitive
+                                    object={scene}
+                                    position={[modelScaleFlag ? -160 : -110, -100, 0]}
+                                    rotation={[0, rotationY, 0]} // Rotating smoothly until target
+                                    scale={1.6}
+                                />
+                                <OrbitControls
+                                    enablePan={false}
+                                    enableZoom={false}
+                                    maxPolarAngle={Math.PI / 2}
+                                    minPolarAngle={1.5}
+                                />
+                            </Canvas>
+                        ) : (
+                            <Box
+                                component="img"
+                                src={model2DPath}
+                                alt="2D Model"
+                                sx={{
+                                    position: "absolute",
+                                    top: 0,
+                                    left: 0,
+                                    width: "100%",
+                                    height: "100%",
+                                    objectFit: "none",
+                                    zIndex: 1,
+                                    display: "block",
+                                    margin: "auto",
+                                }}
                             />
-                            <OrbitControls enablePan={false} enableZoom={false} maxPolarAngle={Math.PI / 2} minPolarAngle={1.5} />
-                        </Canvas>
+                        )}
                         <Typography
                             variant="h1"
                             sx={{
                                 position: "absolute",
+                                zIndex: 0,
                                 fontSize: { xs: "12vw", sm: "15vw" },
                                 textTransform: "uppercase",
                                 letterSpacing: { xs: "1vw", sm: "1.5vw", md: "2vw", lg: "2.5vw" },
                                 color: "#000",
                                 textShadow: `
-                                                10px 10px 20px rgba(0, 0, 0, 0.6), 
-                                                20px 20px 40px rgba(0, 0, 0, 0.4),
-                                                30px 30px 60px rgba(0, 0, 0, 0.2)
-                                            `,
+                                    10px 10px 20px rgba(0, 0, 0, 0.6), 
+                                    20px 20px 40px rgba(0, 0, 0, 0.4),
+                                    30px 30px 60px rgba(0, 0, 0, 0.2)
+                                `,
                             }}
                         >
                             MADZILLA
                         </Typography>
+                        {/* Toggle FAB at top-right corner */}
+                        <Fab
+                            onClick={() => setViewMode(viewMode === "3d" ? "2d" : "3d")}
+                            sx={{
+                                position: "absolute",
+                                top: 16,
+                                right: 16,
+                                backgroundColor: "black",
+                                color: "#fff",
+                            }}
+                            size="small"
+                        >
+                            {viewMode === "3d" ? "2D" : "3D"}
+                        </Fab>
                     </Box>
                 )}
                 <About />
                 <Products />
                 <Contact />
             </Container>
+            {/* Scroll-to-next-section FAB (visible only on mobile) */}
+            <Fab
+                onClick={scrollToNextSection}
+                sx={{
+                    display: { xs: "flex", md: "none" },
+                    position: "fixed",
+                    bottom: 16,
+                    right: 16,
+                    backgroundColor: "black",
+                    color: "#fff",
+                    zIndex: 1000,
+                }}
+            >
+                <KeyboardArrowDownIcon />
+            </Fab>
         </>
     );
 };

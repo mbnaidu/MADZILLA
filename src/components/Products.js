@@ -44,7 +44,7 @@ function Products() {
                     height: "100vh",
                     backgroundColor: "#000",
                     color: "#fff",
-                    padding: { xs: "20px", md: "0px" },
+                    width: "100%"
                 }}
             >
                 {/* Left Section - Product Info */}
